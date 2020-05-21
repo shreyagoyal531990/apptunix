@@ -1,0 +1,12 @@
+<ion-card>
+  <ion-card-content>
+  
+<input type="file" id="file-upload" (change)="gotImage($event)"
+
+accept="image/png, image/jpeg">
+<label for="file-upload">Upload image</label>
+    <ion-icon name="trash" (click)=delete(image_url)></ion-icon>
+    <img *ngIf="image_url" [src]="image_url?image_url['image_path']:''" [ngClass]="{image:image_url['image_path']}">
+
+  </ion-card-content>
+</ion-card>
