@@ -19,6 +19,9 @@ export class ImageComponent implements OnInit {
     private storage: AngularFireStorage,
     private afs: AngularFirestore
   ) { }
+  check($event,img){
+    console.log("imag****",img)
+  }
   delete(item) {
     if (item) {
       var self = this;
@@ -53,8 +56,8 @@ export class ImageComponent implements OnInit {
     console.log("image_url****",this.image_url)
   }
   ngOnInit() { }
-  gotImage(event,image_url) {
-    console.log("image_url in gotImage",image_url)
+  gotImage(event,data_inputted) {
+    console.log("image_url in gotImage",data_inputted)
       var self = this;
     console.log("image_selected", event)
     const id = Math.random().toString(36).substring(2);
@@ -68,8 +71,8 @@ export class ImageComponent implements OnInit {
         console.log("self.downloadURL", data)
 
         self.downloadURL = data
-        console.log("self.image_url", image_url)
-        if (image_url==undefined || image_url=='') {
+        console.log("self.image_url", data_inputted)
+        if (data_inputted==undefined || data_inputted=='') {
           console.log("not of self.image_url")
           try {
             await self.afs.collection('images').doc('123')
@@ -87,12 +90,10 @@ export class ImageComponent implements OnInit {
         }
         else {
           console.log("presence of image_url")
-          // const booking = { some: "data" };
           var db = firebase.firestore()
           const imageRef = db.collection("images").doc('123');
 
           db.runTransaction((transaction: any) => {
-            // This code may get re-run multiple times if there are conflicts.
             return transaction.get(imageRef).then(doc => {
               if (!doc.data().image) {
                 console.log("Image object is not present")
@@ -108,8 +109,8 @@ export class ImageComponent implements OnInit {
                 var images: any;
                 images = doc.data().image;
                 var new_array = images.map((e) => {
-                  console.log("enterd checking field",self.image_url.id,e.id)
-                  if (e.id == image_url.id) {
+                  console.log("enterd checking field",data_inputted.id,e.id)
+                  if (e.id == data_inputted.id) {
                     return {
                       id: id,
                       image_path: self.downloadURL
@@ -126,18 +127,11 @@ export class ImageComponent implements OnInit {
           }).catch(function (error) {
             console.log("Transaction failed: ", error);
           });
-          // await self.afs.collection('images').doc('123').update({
-          //   image: firebase.firestore.FieldValue.arrayUnion({
-          //     id: id,
-          //     image_path: self.downloadURL
-
-          //   })
-          // })
+     
 
         }
 
-        // submitted_data?console.log("submitted successfully"):console.log("not submitted successfully")
-        // self.image_added.emit(self.downloadURL)
+       
 
       })
         , ((error) => {
@@ -149,12 +143,7 @@ export class ImageComponent implements OnInit {
         console.log("Error of task is", error)
       })
 
-    //       console.log("data after  finalizing the build",data)
-    //       console.log("data after url is downloaded",self.downloadURL)
-    // self.afs.collection('images').doc('123').set({image:firebase.firestore.FieldValue.arrayUnion(self.downloadURL)},{merge:true})
-    //       self.image_added.emit(self.downloadURL)
-
-    //     })
+ 
   }
 
 }
