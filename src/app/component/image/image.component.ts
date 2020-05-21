@@ -49,14 +49,16 @@ export class ImageComponent implements OnInit {
 
   }
   ngAfterViewInit() {
-    console.log("***index*****", this.index)
+    // console.log("***index*****", this.index)
+    console.log("image_url****",this.image_url)
   }
   ngOnInit() { }
-  gotImage(event) {
-    var self = this;
+  gotImage(event,image_url) {
+    console.log("image_url in gotImage",image_url)
+      var self = this;
     console.log("image_selected", event)
     const id = Math.random().toString(36).substring(2);
-
+    console.log("id generated", id)
     const file = event.target["files"][0];
     const filePath = 'apputnixPhoto/' + id;
     const ref = this.storage.ref(filePath);
@@ -66,8 +68,8 @@ export class ImageComponent implements OnInit {
         console.log("self.downloadURL", data)
 
         self.downloadURL = data
-        console.log("self.image_url", self.image_url)
-        if (!self.image_url) {
+        console.log("self.image_url", image_url)
+        if (image_url==undefined || image_url=='') {
           console.log("not of self.image_url")
           try {
             await self.afs.collection('images').doc('123')
@@ -106,13 +108,14 @@ export class ImageComponent implements OnInit {
                 var images: any;
                 images = doc.data().image;
                 var new_array = images.map((e) => {
-                  console.log("enterd checking field")
-                  if (e.id == self.image_url.id) {
+                  console.log("enterd checking field",self.image_url.id,e.id)
+                  if (e.id == image_url.id) {
                     return {
                       id: id,
                       image_path: self.downloadURL
                     }
                   }
+                  else { return e }
                 })
                 console.log("Updated array about to inserted", [...new_array])
                 transaction.update(imageRef, { image: [...new_array] });
