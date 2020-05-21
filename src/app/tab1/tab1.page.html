@@ -13,8 +13,8 @@
     </ion-toolbar>
   </ion-header>
 <ion-row>
-  <ion-col *ngFor="let item of all_images">
-    <app-image [image_url]="item" ></app-image>
+  <ion-col *ngFor="let item of all_images;let i=index;">
+    <app-image [image_url]="item" [index]="i" ></app-image>
   </ion-col>
 </ion-row>
 <!-- (gotImage)="addImageToArray($event)" -->
